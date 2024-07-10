@@ -1,0 +1,8 @@
+.vscode/
+[Mm]ods/
+[Mm]odules/
+
+*.o
+*.out
+*.mod
+ipcalc
