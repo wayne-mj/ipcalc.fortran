@@ -25,6 +25,11 @@ program ipcalc
     print *, "Network Address = ", ip1%net1, ".", ip1%net2, ".", ip1%net3, ".", ip1%net4
     print *, "Broadcast Address = ", ip1%bc1, ".", ip1%bc2, ".", ip1%bc3, ".", ip1%bc4
 
+    print *, "IP Address = ", ip1%ipstr
+    print *, "Subnet Mask = ", ip1%maskstr
+    print *, "Network Address = ", ip1%netstr
+    print *, "Broadcast Address = ", ip1%bcstr
+
     contains
 
 end program ipcalc
