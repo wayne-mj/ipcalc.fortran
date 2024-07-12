@@ -6,7 +6,7 @@ program ipcalc
     character(len=32):: ipstr, maskstr
 
     ! Set a default that can be displayed as a guide
-    ipstr = "192.168.0.10"
+    ipstr = "192168.0.10"
     maskstr = "255.255.240.0"
 
     print *, "Enter IP Address (eg ", trim(adjustl(ipstr)), "): "

@@ -12,6 +12,7 @@ module ipcalcmod
     end type ipaddresstype
 
     character(len=1), parameter :: dot = "."
+    logical :: errorflag = .false.
 
     contains
     
@@ -49,12 +50,18 @@ module ipcalcmod
         lenstr = len_trim(dotstring)
         dots = getdots(dotstring)
         
-        read(dotstring(1:dots(1)-1),*) ip%ip1           ! Read the first part of the string
-        read(dotstring(dots(1)+1:dots(2)-1),*) ip%ip2   ! Read the second part of the string
-        read(dotstring(dots(2)+1:dots(3)-1),*) ip%ip3   ! Read the third part of the string       
-        read(dotstring(dots(3)+1:lenstr),*) ip%ip4      ! Read the fourth part of the string
+        if (dots(1) .ne. -1) then
+            read(dotstring(1:dots(1)-1),*) ip%ip1           ! Read the first part of the string
+            read(dotstring(dots(1)+1:dots(2)-1),*) ip%ip2   ! Read the second part of the string
+            read(dotstring(dots(2)+1:dots(3)-1),*) ip%ip3   ! Read the third part of the string       
+            read(dotstring(dots(3)+1:lenstr),*) ip%ip4      ! Read the fourth part of the string
 
-        ip%ipstr = dotstring
+            ip%ipstr = dotstring
+        else
+            errorflag = .true.
+            print *, "Error: Invalid IP address"
+            stop
+        end if
     end subroutine ParseIPString
 
     subroutine ParseMaskString(dotstring, ip) 
@@ -66,12 +73,18 @@ module ipcalcmod
         lenstr = len_trim(dotstring)
         dots = getdots(dotstring)
         
-        read(dotstring(1:dots(1)-1),*) ip%mask1         ! Read the first part of the string
-        read(dotstring(dots(1)+1:dots(2)-1),*) ip%mask2 ! Read the second part of the string
-        read(dotstring(dots(2)+1:dots(3)-1),*) ip%mask3 ! Read the third part of the string
-        read(dotstring(dots(3)+1:lenstr),*) ip%mask4    ! Read the fourth part of the string
+        if (dots(1) .ne. -1) then
+            read(dotstring(1:dots(1)-1),*) ip%mask1         ! Read the first part of the string
+            read(dotstring(dots(1)+1:dots(2)-1),*) ip%mask2 ! Read the second part of the string
+            read(dotstring(dots(2)+1:dots(3)-1),*) ip%mask3 ! Read the third part of the string
+            read(dotstring(dots(3)+1:lenstr),*) ip%mask4    ! Read the fourth part of the string
 
-        ip%maskstr = dotstring
+            ip%maskstr = dotstring
+        else
+            errorflag = .true.
+            print *, "Error: Invalid subnet mask"
+            stop
+        end if
     end subroutine ParseMaskString
 
     ! Find the position of the dots in the string
@@ -80,7 +93,7 @@ module ipcalcmod
         integer :: dots(3)
         integer :: lenstr, i, count
 
-        count =1
+        count = 1
         lenstr = len_trim(dotstring)
         do i =1, lenstr
             if(dotstring(i:i) == dot) then
@@ -88,6 +101,10 @@ module ipcalcmod
                 count = count + 1
             end if
         end do
+
+        if (count .ne. 4) then
+            dots(1) = -1
+        end if
     end function getdots
 
     function int2str(input) result(str)
